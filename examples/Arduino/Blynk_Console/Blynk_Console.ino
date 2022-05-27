@@ -45,7 +45,7 @@
 
 #include <TinyGsmClient.h>
 #include <BlynkSimpleTinyGSM.h>
-
+#include <SPI.h>
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_BMP085.h>

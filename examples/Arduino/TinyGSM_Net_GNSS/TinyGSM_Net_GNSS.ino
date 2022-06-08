@@ -119,14 +119,8 @@ void setup()
 
 
     modem.sendAT(GF("+CGDRT=5,1"));//GPIO5 output
-    if (modem.waitResponse(10000L) != 1) {
-        return ;
-    }
-
     modem.sendAT(GF("+CGSETV=5,1"));// Power off the GNSS_1V8
-    if (modem.waitResponse(10000L) != 1) {
-        return ;
-    }
+
 
 }
 
@@ -226,10 +220,7 @@ void loop()
 
     modem.sendAT(GF("+CGSETV=5,0"));// on the GNSS_1V8
     if (modem.waitResponse(10000L) != 1) {
-        while (1) {
-            DBG("+CGDRT=5,0 FALL");
-            delay(1000);
-        }
+
     }
 
     modem.enableGPS();

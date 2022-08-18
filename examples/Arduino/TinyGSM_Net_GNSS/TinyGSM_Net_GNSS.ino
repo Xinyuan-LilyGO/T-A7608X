@@ -5,6 +5,10 @@
 // Set serial for debug console (to the Serial Monitor, default speed 115200)
 #define SerialMon Serial
 
+
+// Define the serial console for debug prints, if needed
+#define TINY_GSM_DEBUG SerialMon
+
 // See all AT commands, if wanted
 #define DUMP_AT_COMMANDS
 
@@ -19,7 +23,7 @@
 #define GSM_PIN ""
 
 // Your GPRS credentials, if any
-const char apn[]  = "YOUR-APN";     //SET TO YOUR APN
+const char apn[]  = "cmnet";     //SET TO YOUR APN
 const char gprsUser[] = "";
 const char gprsPass[] = "";
 
@@ -52,7 +56,6 @@ TinyGsm modem(SerialAT);
 #define BAT_ADC     35
 #define BAT_EN      12
 #define  PIN_RI     33
-#define  PIN_DTR    25
 #define  RESET      5
 
 #define SD_MISO     2
@@ -108,18 +111,18 @@ void setup()
 
     SerialAT.begin(UART_BAUD, SERIAL_8N1, PIN_RX, PIN_TX);
 
-    // Restart takes quite some time
-    // To skip it, call init() instead of restart()
-    SerialMon.println("Initializing modem...");
-    if (!modem.init()) {
-        SerialMon.println("Failed to restart modem, attempting to continue without restarting");
-    }
+    // // Restart takes quite some time
+    // // To skip it, call init() instead of restart()
+    // SerialMon.println("Initializing modem...");
+    // if (!modem.init()) {
+    //     SerialMon.println("Failed to restart modem, attempting to continue without restarting");
+    // }
 
 
 
 
-    modem.sendAT(GF("+CGDRT=5,1"));//GPIO5 output
-    modem.sendAT(GF("+CGSETV=5,1"));// Power off the GNSS_1V8
+    // modem.sendAT(GF("+CGDRT=5,1"));//GPIO5 output
+    // modem.sendAT(GF("+CGSETV=5,1"));// Power off the GNSS_1V8
 
 
 }
@@ -127,18 +130,15 @@ void setup()
 void loop()
 {
 
+    // while (1) {
+    //     while (SerialMon.available()) {
+    //         SerialAT.write(SerialMon.read());
+    //     }
+    //     while (SerialAT.available()) {
+    //         SerialMon.write(SerialAT.read());
+    //     }
+    // }
 
-
-    /*
-         while (1) {
-             while (SerialMon.available()) {
-                 SerialAT.write(SerialMon.read());
-             }
-             while (SerialAT.available()) {
-                 SerialMon.write(SerialAT.read());
-             }
-         }
-    */
 
     // Restart takes quite some time
     // To skip it, call init() instead of restart()
@@ -167,6 +167,7 @@ void loop()
     // The XBee must run the gprsConnect function BEFORE waiting for network!
     modem.gprsConnect(apn, gprsUser, gprsPass);
 #endif
+
 
     DBG("Waiting for network...");
     if (!modem.waitForNetwork()) {
@@ -218,6 +219,11 @@ void loop()
 
 #if TINY_GSM_TEST_GPS
 
+    modem.sendAT(GF("+CVAUXS=1"));// Enable VDD_AUX VDD_AUX
+    if (modem.waitResponse(10000L) != 1) {
+
+    }
+
     modem.sendAT(GF("+CGSETV=5,0"));// on the GNSS_1V8
     if (modem.waitResponse(10000L) != 1) {
 
@@ -231,7 +237,6 @@ void loop()
             delay(1000);
             DBG("EnableGPS  false");
         }
-
     }
 
     float lat,  lon;

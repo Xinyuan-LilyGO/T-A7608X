@@ -28,6 +28,7 @@ TinyGsm modem(SerialAT);
 #define uS_TO_S_FACTOR 1000000ULL  // Conversion factor for micro seconds to seconds
 #define TIME_TO_SLEEP  60          // Time ESP32 will go to sleep (in seconds)
 
+
 #define UART_BAUD   115200
 #define PIN_DTR     25
 #define PIN_TX      26
@@ -36,14 +37,12 @@ TinyGsm modem(SerialAT);
 #define BAT_ADC     35
 #define BAT_EN      12
 #define  PIN_RI     33
-#define  PIN_DTR    25
 #define  RESET      5
 
 #define SD_MISO     2
 #define SD_MOSI     15
 #define SD_SCLK     14
 #define SD_CS       13
-
 
 int counter, lastIndex, numberOfPieces = 24;
 String pieces[24], input;
@@ -59,6 +58,10 @@ void modem_on()
 // BAT EN
     pinMode(BAT_EN, OUTPUT);
     digitalWrite(BAT_EN, HIGH);
+
+
+    pinMode(PIN_DTR, OUTPUT);
+    digitalWrite(PIN_DTR, LOW);
 
 //A7608 Reset
     pinMode(RESET, OUTPUT);

@@ -46,7 +46,7 @@ Ticker tick;
 
 #define UART_BAUD   115200
 #define PIN_DTR     25
-#define PIN_TX        26
+#define PIN_TX      26
 #define PIN_RX      27
 #define PWR_PIN      4
 #define BAT_ADC      35
@@ -95,26 +95,26 @@ bool bmpSensorDetected = true;
 void setup()
 {
     Serial.begin(UART_BAUD);
-   SerialAT.begin(UART_BAUD, SERIAL_8N1, PIN_RX, PIN_TX);
+    SerialAT.begin(UART_BAUD, SERIAL_8N1, PIN_RX, PIN_TX);
 
 
-  SerialMon.println("setup...");
+    SerialMon.println("setup...");
 
- // BAT EN
- pinMode(BAT_EN, OUTPUT);
- digitalWrite(BAT_EN, HIGH);
+// BAT EN
+    pinMode(BAT_EN, OUTPUT);
+    digitalWrite(BAT_EN, HIGH);
 
- //A7608 Reset 
-  pinMode(RESET, OUTPUT);
-  digitalWrite(RESET, LOW);
+//A7608 Reset
+    pinMode(RESET, OUTPUT);
+    digitalWrite(RESET, LOW);
 
- //A7608 Power on
-  pinMode(PWR_PIN, OUTPUT);
-  digitalWrite(PWR_PIN, LOW);
-  delay(100);
-  digitalWrite(PWR_PIN, HIGH);
-  delay(1000);
-  digitalWrite(PWR_PIN, LOW);
+//A7608 Power on
+    pinMode(PWR_PIN, OUTPUT);
+    digitalWrite(PWR_PIN, LOW);
+    delay(100);
+    digitalWrite(PWR_PIN, HIGH);
+    delay(1000);
+    digitalWrite(PWR_PIN, LOW);
 
 
     // Launch BMP085
@@ -125,15 +125,15 @@ void setup()
     }
 
 
-      // Restart takes quite some time
-  // To skip it, call init() instead of restart()
-  DBG("Initializing modem...");
-  if (!modem.init()) {
-    DBG("Failed to restart modem, delaying 10s and retrying");
-    // restart autobaud in case GSM just rebooted
-    // TinyGsmAutoBaud(SerialAT, GSM_AUTOBAUD_MIN, GSM_AUTOBAUD_MAX);
-    return;
-  }
+    // Restart takes quite some time
+    // To skip it, call init() instead of restart()
+    DBG("Initializing modem...");
+    if (!modem.init()) {
+        DBG("Failed to restart modem, delaying 10s and retrying");
+        // restart autobaud in case GSM just rebooted
+        // TinyGsmAutoBaud(SerialAT, GSM_AUTOBAUD_MIN, GSM_AUTOBAUD_MAX);
+        return;
+    }
 
 #ifdef USE_GSM
     Cayenne.begin(username, password, clientID, SerialAT, apn, gprsLogin, gprsPassword, pin);
@@ -212,15 +212,15 @@ CAYENNE_OUT(ALTITUDE_VIRTUAL_CHANNEL)
 
 CAYENNE_OUT(BATTERY_VIRTUAL_CHANNEL)
 {
-    
-  uint8_t  chargeState = -99;
-  int8_t   percent     = -99;
-  uint16_t milliVolts  = -9999;
-  modem.getBattStats(chargeState, percent, milliVolts);
-  DBG("Battery charge state:", chargeState);
-  DBG("Battery charge 'percent':", percent);
-  DBG("Battery voltage:", milliVolts / 1000.0F);
-   Cayenne.virtualWrite(BATTERY_VIRTUAL_CHANNEL, milliVolts, TYPE_VOLTAGE, UNIT_MILLIVOLTS);
+
+    uint8_t  chargeState = -99;
+    int8_t   percent     = -99;
+    uint16_t milliVolts  = -9999;
+    modem.getBattStats(chargeState, percent, milliVolts);
+    DBG("Battery charge state:", chargeState);
+    DBG("Battery charge 'percent':", percent);
+    DBG("Battery voltage:", milliVolts / 1000.0F);
+    Cayenne.virtualWrite(BATTERY_VIRTUAL_CHANNEL, milliVolts, TYPE_VOLTAGE, UNIT_MILLIVOLTS);
 
 }
 

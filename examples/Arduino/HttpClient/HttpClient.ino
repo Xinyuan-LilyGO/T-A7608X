@@ -8,7 +8,7 @@
 #define SerialAT Serial1
 
 // See all AT commands, if wanted
-//#define DUMP_AT_COMMANDS
+#define DUMP_AT_COMMANDS
 
 // Define the serial console for debug prints, if needed
 #define TINY_GSM_DEBUG SerialMon
@@ -20,7 +20,8 @@
 #define GSM_PIN ""
 
 // Your GPRS credentials, if any
-const char apn[]      = "YourAPN";
+// const char apn[]      = "YourAPN";
+const char apn[]      = "CMNET";
 const char gprsUser[] = "";
 const char gprsPass[] = "";
 
@@ -77,7 +78,6 @@ Ticker tick;
 #define BAT_ADC     35
 #define BAT_EN      12
 #define  PIN_RI     33
-#define  PIN_DTR    25
 #define  RESET      5
 
 #define SD_MISO     2
@@ -121,12 +121,23 @@ void setup()
 
     SerialAT.begin(UART_BAUD, SERIAL_8N1, PIN_RX, PIN_TX);
 
+
+    // while (true) {
+    //     if (SerialAT.available()) {
+    //         Serial.write(SerialAT.read());
+    //     }
+    //     if (Serial.available()) {
+    //         SerialAT.write(Serial.read());
+    //     }
+    //     delay(1);
+    // }
+
     // Restart takes quite some time
     // To skip it, call init() instead of restart()
     DBG("Initializing modem...");
     if (!modem.init()) {
         DBG("Failed to restart modem, delaying 10s and retrying");
-        return;
+        // return;
     }
 
     /*

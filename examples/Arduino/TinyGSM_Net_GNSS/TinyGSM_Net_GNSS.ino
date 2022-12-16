@@ -239,15 +239,31 @@ void loop()
         }
     }
 
-    float lat,  lon;
+    float parameter1,  parameter2;
     while (1) {
-        if (modem.getGPS(&lat, &lon)) {
-            SerialMon.printf("lat:%f lon:%f\n", lat, lon);
+        if (modem.getGPS(&parameter1, &parameter2)) {
+            modem.sendAT(GF("+CGNSSINFO"));
+            if (modem.waitResponse(GF(GSM_NL "+CGNSSINFO:")) == 1) {
+                String res = modem.stream.readStringUntil('\n');
+                String lat = "";
+                String n_s = "";
+                String lon = "";
+                String e_w = "";
+                res.trim();
+                lat = res.substring(8, res.indexOf(',', 8));
+                n_s = res.substring(19, res.indexOf(',', res.indexOf(',', 19)));
+                lon = res.substring(21, res.indexOf(',', res.indexOf(',', 21)));
+                e_w = res.substring(33, res.indexOf(',', res.indexOf(',', 33)));
+                delay(100);
+                Serial.println("****************GNSS********************");
+                Serial.printf("lat:%s %s\n", lat, n_s);
+                Serial.printf("lon:%s %s\n", lon, e_w);
 
+            }
             break;
         } else {
-            SerialMon.print("getGPS ");
-            SerialMon.println(millis());
+            Serial.print("getGPS ");
+            Serial.println(millis());
         }
         delay(2000);
     }

@@ -7,19 +7,19 @@
  *
  */
 
-#define UART_BAUD           115200
-#define MODEM_DTR_PIN             25
-#define PIN_TX              26
-#define PIN_RX              27
-#define MODEM_PWR_PIN             4
-#define BAT_ADC             35
+#define UART_BAUD                   115200
+#define MODEM_DTR_PIN               25
+#define MODEM_TXD_PIN               26
+#define MODEM_RXD_PIN               27
+#define MODEM_PWR_PIN               4
+#define BAT_ADC                     35
 #define BOARD_POWER_ON              12
-#define PIN_RI              33
+#define MODEM_RI_PIN                33
 #define MODEM_RST_PIN               5
-#define SD_MISO             2
-#define SD_MOSI             15
-#define SD_SCLK             14
-#define SD_CS               13
+#define SD_MISO                     2
+#define SD_MOSI                     15
+#define SD_SCLK                     14
+#define SD_CS                       13
 
 #define TINY_GSM_MODEM_SIM7600  //A7608's AT instruction is compatible with SIM7600
 #define TINY_GSM_RX_BUFFER 1024 // Set RX buffer to 1Kb
@@ -47,7 +47,7 @@ void displayInfo();
 void setup()
 {
     Serial.begin(115200);
-    SerialAT.begin(115200, SERIAL_8N1, PIN_RX, PIN_TX);
+    SerialAT.begin(115200, SERIAL_8N1, MODEM_RXD_PIN, MODEM_TXD_PIN);
 
     // Board Power control pin
     // When using battery power, this pin must be set to HIGH

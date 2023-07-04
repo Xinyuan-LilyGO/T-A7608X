@@ -64,52 +64,59 @@ void setup()
 
     //modem power key pin
     pinMode(MODEM_PWR_PIN, OUTPUT);
+
     digitalWrite(MODEM_PWR_PIN, LOW);
     delay(100);
     digitalWrite(MODEM_PWR_PIN, HIGH);
     delay(1000);    //Ton = 1000ms ,Min = 500ms, Max 2000ms
     digitalWrite(MODEM_PWR_PIN, LOW);
 
+    do {
 
-    Serial.print("Modem starting...");
-    int retry = 0;
-    while (!modem.testAT(1000)) {
-        Serial.println(".");
-        if (retry++ > 10) {
-            digitalWrite(MODEM_PWR_PIN, LOW);
-            delay(100);
-            digitalWrite(MODEM_PWR_PIN, HIGH);
-            delay(1000);    //Ton = 1000ms ,Min = 500ms, Max 2000ms
-            digitalWrite(MODEM_PWR_PIN, LOW);
-            retry = 0;
+        /*
+        *   During testing, it was found that there may be a power outage.
+            Add a loop detection here. When the GPS timeout does not start,
+            resend the AT to check if the modem is online
+        * */
+        Serial.print("Modem starting...");
+        int retry = 0;
+        while (!modem.testAT(1000)) {
+            Serial.println(".");
+            if (retry++ > 10) {
+                digitalWrite(MODEM_PWR_PIN, LOW);
+                delay(100);
+                digitalWrite(MODEM_PWR_PIN, HIGH);
+                delay(1000);    //Ton = 1000ms ,Min = 500ms, Max 2000ms
+                digitalWrite(MODEM_PWR_PIN, LOW);
+                retry = 0;
+            }
         }
-    }
-    Serial.println();
+        Serial.println();
 
-    delay(200);
+        delay(200);
 
-    //START Compatible with previous versions of devices, this command is invalid in the new version, please ignore
-    modem.sendAT("+CGDRT=5,1");
-    modem.waitResponse(10000L);
+        //START Compatible with previous versions of devices, this command is invalid in the new version, please ignore
+        modem.sendAT("+CGDRT=5,1");
+        modem.waitResponse(10000L);
 
-    modem.sendAT("+CGSETV=5,0");
-    modem.waitResponse(10000L);
-    //END  Compatible with previous versions of devices, this command is invalid in the new version, please ignore
+        modem.sendAT("+CGSETV=5,0");
+        modem.waitResponse(10000L);
+        //END  Compatible with previous versions of devices, this command is invalid in the new version, please ignore
 
-    //START In the new version, AUX power supply needs to be turned on, but this command is invalid in the old version
-    modem.sendAT("+CVAUXS=1");
-    modem.waitResponse(10000L);
-    //END In the new version, AUX power supply needs to be turned on, but this command is invalid in the old version
+        //START In the new version, AUX power supply needs to be turned on, but this command is invalid in the old version
+        modem.sendAT("+CVAUXS=1");
+        modem.waitResponse(10000L);
+        //END In the new version, AUX power supply needs to be turned on, but this command is invalid in the old version
 
-    Serial.print("GPS starting...");
-    modem.sendAT("+CGNSSPWR=1");
-    while (modem.waitResponse(10000UL, "+CGNSSPWR: READY!") != 1) {
-        Serial.print(".");
-    }
+        Serial.print("GPS starting...");
+        modem.sendAT("+CGNSSPWR=1");
+
+    } while (modem.waitResponse(10000UL, "+CGNSSPWR: READY!") != 1);
+
     Serial.println("GPS Ready!");
 
     //Configure the baud rate of UART3 and GPS module
-    modem.sendAT("+CGNSSIPR=115200");
+    modem.sendAT("+CGNSSIPR=9600");
     modem.waitResponse(1000L);
 
     //Configure GNSS support mode : BD + GPS

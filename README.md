@@ -1,4 +1,12 @@
+
+
+
 <h1 align = "center">🌟LilyGo T-A7608X🌟</h1>
+
+# News 
+
+######  The warehouse has been moved to [LilyGO-T-A76XX](https://github.com/Xinyuan-LilyGO/LilyGO-T-A76XX). This warehouse example will no longer be maintained.
+
 
 ## **English | [中文](docs/docs_cn.md)**
 
